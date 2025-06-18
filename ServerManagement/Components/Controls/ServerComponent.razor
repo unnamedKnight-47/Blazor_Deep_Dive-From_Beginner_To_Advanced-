@@ -1,9 +1,7 @@
 ﻿<p>
-    @_status at @DateTime.Now
+    @_server.Name is in @_server.City
 </p>
 
 @code {
-
-    private string _status = "Server is offline";
-
+    private Server _server = new Server { Name = "Server 1", City = "Toronto" };
 }
