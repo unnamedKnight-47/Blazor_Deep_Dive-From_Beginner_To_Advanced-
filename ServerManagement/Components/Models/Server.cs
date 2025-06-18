@@ -1,11 +1,11 @@
-﻿namespace ServerManagement.Components.Models;
+namespace ServerManagement.Components.Models;
 
 public class Server
 {
     public Server()
     {
         Random random = new Random();
-        int randomNumber = random.Next(1, 2);
+        int randomNumber = random.Next(0, 2);
         IsOnline = randomNumber != 0;
     }
 
@@ -13,4 +13,5 @@ public class Server
     public bool IsOnline { get; set; }
     public string? Name { get; set; }
     public string? City { get; set; }
+
 }

@@ -1,4 +1,4 @@
-﻿@page "/servers"
+@page "/servers"
 
 <h3>Servers</h3>
 <br/>
@@ -8,13 +8,30 @@
 @* there are two ways to get rid of the follwoing chaose *@
 @* <ServerManagement.Components.Controls.ServerComponent></ServerManagement.Components.Controls.ServerComponent> *@
 
+
+
+@*
 <ServerComponent></ServerComponent>
+
 <br/>
 
 <ServerComponent></ServerComponent>
+*@
+
+<ul>
+    @foreach (var item in _servers)
+    {
+        <li style="color: @(item.IsOnline ? "green" : "red")">
+            @item.Name in @item.City is <span style="color: @(item.IsOnline ? "green" : "red")"></span> @(item.IsOnline ? "online" : "offline")
+        </li>
+    }
+
+
+</ul>
 
 
 
 @code {
 
+    private List<Server> _servers = ServersRepository.GetServersByCity("Toronto");
 }
