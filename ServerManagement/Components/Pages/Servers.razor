@@ -30,7 +30,8 @@
                     <div class="card-body">
                         <button href="#"
                                 class="btn btn-primary"
-                                value="@item">@item
+                                value="@item">
+                            @item
                         </button>
                     </div>
                 </div>
@@ -40,8 +41,23 @@
     </div>
 </div>
 
+<ul>
+    @foreach (var item in _servers)
+    {
+        <li>
+            @item.Name in @item.City is <span
+                style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
+            <a href="/servers/edit"
+                  class="link-underline-primary">Edit</a>
+            
+        </li>
+    }
+</ul>
+
 
 @code {
 
     private List<string?> _cities = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
+
+    private List<Server> _servers = ServersRepository.GetServersByCity("Toronto");
 }
