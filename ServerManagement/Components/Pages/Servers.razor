@@ -47,9 +47,9 @@
         <li>
             @item.Name in @item.City is <span
                 style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
-            <a href="/servers/edit"
+            <a href="/servers/@item.ServerId"
                   class="link-underline-primary">Edit</a>
-            
+
         </li>
     }
 </ul>
