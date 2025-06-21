@@ -3,7 +3,7 @@
 
 
 <h3>EditServer</h3>
-<br/>
+<br />
 @Id
 
 @if (server is not null)
@@ -13,7 +13,7 @@
         <DataAnnotationsValidator></DataAnnotationsValidator>
 
 
-        <InputNumber @bind-Value="@server.ServerId"
+        <InputNumber @bind-Value="server.ServerId"
                      hidden></InputNumber>
 
         <div class="row mb-3">
@@ -21,13 +21,11 @@
                 <label class="col-form-label">Name</label>
             </div>
             <div class="col-6">
-                <InputText
-                    @bind-Value="@server.Name"
-                    class="form-control"></InputText>
+                <InputText @bind-Value="server.Name"
+                           class="form-control"></InputText>
             </div>
             <div class="col">
-                <ValidationMessage
-                    For="() => @server.Name"></ValidationMessage>
+                <ValidationMessage For="() => server.Name"></ValidationMessage>
             </div>
         </div>
 
@@ -36,13 +34,11 @@
                 <label class="col-form-label">City</label>
             </div>
             <div class="col-6">
-                <InputText
-                    @bind-Value="@server.City"
-                    class="form-control"></InputText>
+                <InputText @bind-Value="server.City"
+                           class="form-control"></InputText>
             </div>
             <div class="col">
-                <ValidationMessage
-                    For="() => @server.City"></ValidationMessage>
+                <ValidationMessage For="() => server.City"></ValidationMessage>
             </div>
         </div>
 
@@ -51,12 +47,11 @@
                 <label class="col-form-label">Online</label>
             </div>
             <div class="col-6">
-                <InputCheckbox
-                    @bind-Value="@server.IsOnline"
-                    class="form-check-input"></InputCheckbox>
+                <InputCheckbox @bind-Value="server.IsOnline"
+                               class="form-check-input"></InputCheckbox>
             </div>
         </div>
-        <br/>
+        <br />
         <button type="submit" class="btn btn-primary">
             Update
         </button>
@@ -66,9 +61,9 @@
 
 @code {
 
-    [ Parameter ]public string? Id { get; set; }
+    [Parameter] public string? Id { get; set; }
 
-    [ SupplyParameterFromForm(FormName = "formServer") ]
+    [SupplyParameterFromForm(FormName = "formServer")]
     private Server? server { get; set; }
 
     private int intServerId;
