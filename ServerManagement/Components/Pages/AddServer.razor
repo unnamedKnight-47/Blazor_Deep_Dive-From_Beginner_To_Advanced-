@@ -2,8 +2,9 @@
 
 <h3>AddServer</h3>
 
-<EditForm Model="server" FormName="AddServer" OnValidSubmit="Submit">
-
+<EditForm Model="server" FormName="AddServer"
+          OnValidSubmit="Submit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
 
 
     <div class="row mb-3">
@@ -11,10 +12,12 @@
             <label class="col-form-label">Name</label>
         </div>
         <div class="col-6">
-            <InputText class="form-control" @bind-Value="server.Name"></InputText>
+            <InputText class="form-control"
+                       @bind-Value="server.Name"></InputText>
         </div>
         <div class="col">
-            <ValidationMessage For="() => server.Name"></ValidationMessage>
+            <ValidationMessage
+                For="() => server.Name"></ValidationMessage>
         </div>
     </div>
 
@@ -23,10 +26,12 @@
             <label class="col-form-label">City</label>
         </div>
         <div class="col-6">
-            <InputText class="form-control" @bind-Value="server.City"></InputText>
+            <InputText class="form-control"
+                       @bind-Value="server.City"></InputText>
         </div>
         <div class="col">
-            <ValidationMessage For="() => server.City"></ValidationMessage>
+            <ValidationMessage
+                For="() => server.City"></ValidationMessage>
         </div>
     </div>
 
@@ -35,10 +40,11 @@
             <label class="col-form-label">Online</label>
         </div>
         <div class="col-6">
-            <InputCheckbox class="form-check-input" @bind-Value="server.IsOnline"></InputCheckbox>
+            <InputCheckbox class="form-check-input"
+                           @bind-Value="server.IsOnline"></InputCheckbox>
         </div>
     </div>
-    <br />
+    <br/>
     <button type="submit" class="btn btn-primary">
         Add Server
     </button>
@@ -47,10 +53,11 @@
 
 @code {
 
-    public Server server = new Server() { IsOnline = false };
+    [ SupplyParameterFromForm ]public Server server { get; set; } = new Server() { IsOnline = false };
 
     private void Submit(EditContext args)
     {
-        throw new NotImplementedException();
+        ServersRepository.AddServer(server);
     }
+
 }

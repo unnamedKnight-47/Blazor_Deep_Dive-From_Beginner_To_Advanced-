@@ -55,12 +55,15 @@
         <button type="submit" class="btn btn-primary">
             Update
         </button>
+
+        <a type="button" class="btn btn-primary" href="/servers">Servers</a>
+
+
     </EditForm>
 }
 
 
 @code {
-
     [Parameter] public string? Id { get; set; }
 
     [SupplyParameterFromForm(FormName = "formServer")]
@@ -75,7 +78,30 @@
         if (isParsedSuccessfully) server ??= ServersRepository.GetServerByServerId(intServerId);
     }
 
-    private void Submit()
+    // private void Submit()
+    // {
+    //     if (server is not null)
+    //     {
+    //         isParsedSuccessfully = Int32.TryParse(Id, out intServerId);
+    //         if (isParsedSuccessfully)
+    //         {
+    //             ServersRepository.UpdateServer(intServerId, server);
+    //         }
+    //     }
+    //     try
+    //     {
+
+    //         NavigationManager.NavigateTo("/servers");
+    //     }
+    //     catch (Exception ex)
+    //     {
+
+    //         Console.WriteLine($"{ex.Message}");
+    //     }
+
+    // }
+
+    private async Task Submit()
     {
         if (server is not null)
         {
@@ -85,7 +111,11 @@
                 ServersRepository.UpdateServer(intServerId, server);
             }
         }
-        NavigationManager.NavigateTo("/servers");
+        // Schedule navigation *after* Blazor is done rendering this cycle
+        await InvokeAsync(() =>
+        {
+            NavigationManager.NavigateTo("/servers");
+        });
     }
-
 }
+
