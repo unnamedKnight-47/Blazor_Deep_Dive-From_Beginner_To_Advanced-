@@ -2,26 +2,16 @@
 @rendermode InteractiveServer
 
 <h3>Servers</h3>
-<br />
-<br />
-
-@* there are two ways to get rid of the follwoing chaose *@
-@* <ServerManagement.Components.Controls.ServerComponent></ServerManagement.Components.Controls.ServerComponent> *@
-@*
-<ServerComponent></ServerComponent>
-
 <br/>
-
-<ServerComponent></ServerComponent>
-*@
-
+<br/>
 
 <div class="container-fluid text-center">
     <div class="row w-50">
         @foreach (var item in _cities)
         {
             <div class="col">
-                <div class="card @(selectedCity.Equals(item, StringComparison.OrdinalIgnoreCase) ? "border-primary" : "") ">
+                <div
+                    class="card @(selectedCity.Equals(item, StringComparison.OrdinalIgnoreCase) ? "border-primary" : "") ">
                     <img src="@($"/images/{item}.png")"
                          class="card-img-top"
                          alt="...">
@@ -40,34 +30,14 @@
     </div>
 </div>
 
-<br />
-
-@* <ServerComponent *@
-@*     @rendermode="InteractiveServer"></ServerComponent> *@
-
+<br/>
 
 @serverFilter
 <br>
 <br>
 <div class="input-group">
-
-    @* when we use @bind-value in an element, blazor automically creates
-    an onChange event for that HTML element, and associate onChange
-    event with the variable that was provided with the @bind-value.
-
-    In this case, the following input field is bound with serverFilter
-    variable, so blazor created an onChange event behind the scene for
-    this variable, so when the value of input changes,the value of
-    serverFilter variable also changes.
-
-*@
-
-    @* with the oninput event set up like following, we can trigger the setter
-    of the serverFilter whenever text changes;
-*@
-
     <input class="form-control" @bind-value="serverFilter"
-           @bind-value:event="oninput" />
+           @bind-value:event="oninput"/>
     <button type="button" class="btn btn-secondary">
         Search
     </button>
@@ -79,7 +49,8 @@
     @foreach (var item in _servers)
     {
         <li>
-            @item.Name in @item.City is <span style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
+            @item.Name in @item.City is <span
+                style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
             <a href="/servers/@item.ServerId"
                class="link-underline-primary">Edit</a>
 
@@ -87,18 +58,10 @@
     }
 </ul>
 
-
-
 @code {
-
-
-
-    private List<Server> _servers { get; set; }
     private List<string?> _cities = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
 
     private string? selectedCity;
-
-
     private string _serverFilter = string.Empty;
 
     private string serverFilter
@@ -107,11 +70,9 @@
         set
         {
             _serverFilter = value;
-
             _servers = ServersRepository.SearchServers(_serverFilter);
         }
     }
-
 
     protected override void OnInitialized()
     {
