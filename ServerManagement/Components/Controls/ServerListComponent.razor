@@ -1,15 +1,9 @@
 ﻿<h3>ServerListComponent</h3>
-
-
 <ul>
     @foreach (var item in _servers)
     {
         <li>
-            @item.Name in @item.City is <span
-                style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
-            <a href="/servers/@item.ServerId"
-               class="link-underline-primary">Edit</a>
-
+            <ServerComponent Server="item" ></ServerComponent>
         </li>
     }
 </ul>

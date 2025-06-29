@@ -1,31 +1,17 @@
-@if (_server is not null)
-{
-    <div data-name="@_server.Name"
-         data-status="Server is @(_server.IsOnline ? "online" : "offline")"
-         style="color: @(_server.IsOnline ? "green" : "red")">
-        @_server.Name is
-        in @_server.City @(_server.IsOnline ? "online" : "offline")
-        &nbsp;
 
-        <button type="button" class="btn btn-primary"
-                @onclick="ChangeStatus">
-            Turn on / off
-        </button>
-
-    </div>
-}
+@Server.Name in @Server.City is <span
+    style="color: @(Server.IsOnline ? "green" : "red")">@(Server.IsOnline ? "online" : "offline")</span>
+<a href="/servers/@Server.ServerId"
+   class="link-underline-primary">Edit</a>
 
 
 @code {
-    [ SupplyParameterFromForm ]private Server? _server { get; set; } = new Server() { Name = "Server x", City = "Toronto" };
 
+    [ Parameter ]public Server? Server { get; set; }
 
-    private void ChangeStatus()
-    {
-        if (_server is not null)
-        {
-            this._server.IsOnline = !this._server.IsOnline;
-        }
-    }
+    // protected override void OnParametersSet()
+    // {
+    //
+    // }
 
 }
