@@ -5,7 +5,8 @@
 <br/>
 <br/>
 
-<CityListComponent ></CityListComponent>
+<CityListComponent
+    SelectCityCallback="HandleCitySelection"></CityListComponent>
 
 <br/>
 @serverFilter
@@ -26,10 +27,13 @@ so, the parent component can use CityName property to send
 argument to the ServerListComponent by using CityName property
 like following *@
 
-<ServerListComponent CityName="Toronto"></ServerListComponent>
+<ServerListComponent
+    CityName="@selectedCity"></ServerListComponent>
 
 @code {
     private string _serverFilter = string.Empty;
+
+    private string selectedCity = "Toronto";
 
     private string serverFilter
     {
@@ -41,5 +45,10 @@ like following *@
         }
     }
 
+
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+    }
 
 }

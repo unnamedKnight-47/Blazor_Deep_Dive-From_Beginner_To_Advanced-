@@ -6,7 +6,8 @@
         <div class="row w-50">
             @foreach (var item in _cities)
             {
-                <CityComponent city="@item" SelectCityCallback="HandleCitySelection"
+                <CityComponent city="@item"
+                               SelectCityCallback="HandleCitySelection"
                                selectedCity="@selectedCity"></CityComponent>
             }
         </div>
@@ -21,9 +22,12 @@
     private List<string?> _cities { get; set; } = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
 
 
+    [ Parameter ]public EventCallback<string> SelectCityCallback { get; set; }
+
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
+        SelectCityCallback.InvokeAsync(cityName);
     }
 
 }
