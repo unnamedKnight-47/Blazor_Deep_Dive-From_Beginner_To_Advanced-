@@ -30,7 +30,7 @@ public static class ServersRepository
 
     public static List<Server> GetServres() => servers;
 
-    public static List<Server> GetServersByCity(string cityName)
+    public static List<Server> GetServersByCity(string? cityName)
     {
         return servers.Where(s => s.City.Equals(cityName, StringComparison.OrdinalIgnoreCase)).ToList();
     }

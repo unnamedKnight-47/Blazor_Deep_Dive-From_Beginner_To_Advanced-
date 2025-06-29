@@ -45,23 +45,16 @@
 <br>
 <br>
 
-<ul>
-    @foreach (var item in _servers)
-    {
-        <li>
-            @item.Name in @item.City is <span
-                style="color: @(item.IsOnline ? "green" : "red")">@(item.IsOnline ? "online" : "offline")</span>
-            <a href="/servers/@item.ServerId"
-               class="link-underline-primary">Edit</a>
 
-        </li>
-    }
-</ul>
+<ServerListComponent @rendermode="InteractiveServer"
+    CityName="@selectedCity"></ServerListComponent>
 
 @code {
-    private List<string?> _cities = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
 
-    private string? selectedCity;
+
+    private List<string?> _cities { get; set; }
+
+    private string? selectedCity = "Toronto";
     private string _serverFilter = string.Empty;
 
     private string serverFilter
@@ -70,20 +63,20 @@
         set
         {
             _serverFilter = value;
-            _servers = ServersRepository.SearchServers(_serverFilter);
+            // _servers = ServersRepository.SearchServers(_serverFilter);
         }
     }
 
+
     protected override void OnInitialized()
     {
-        selectedCity ??= "Toronto";
-        _servers = ServersRepository.GetServersByCity(selectedCity);
+        _cities = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
     }
 
     private void GetServersByCity(string cityName)
     {
         selectedCity = cityName;
-        _servers = ServersRepository.GetServersByCity(cityName);
+        // _servers = ServersRepository.GetServersByCity(cityName);
     }
 
 }
