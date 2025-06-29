@@ -1,0 +1,29 @@
+<h3>CityListComponent</h3>
+
+@if (_cities is not null)
+{
+    <div class="container-fluid text-center">
+        <div class="row w-50">
+            @foreach (var item in _cities)
+            {
+                <CityComponent city="@item" SelectCityCallback="HandleCitySelection"
+                               selectedCity="@selectedCity"></CityComponent>
+            }
+        </div>
+    </div>
+}
+
+
+
+@code {
+
+    private string selectedCity = "Toronto";
+    private List<string?> _cities { get; set; } = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
+
+
+    private void HandleCitySelection(string cityName)
+    {
+        selectedCity = cityName;
+    }
+
+}
