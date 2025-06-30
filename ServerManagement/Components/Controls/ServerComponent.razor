@@ -1,11 +1,26 @@
+<li>
+    @Server.Name in @Server.City is <span
+        style="color: @(Server.IsOnline ? "green" : "red")">@(Server.IsOnline ? "online" : "offline")</span>
+    <a href="/servers/@Server.ServerId"
+       class="link-underline-primary">Edit</a>
 
-@Server.Name in @Server.City is <span
-    style="color: @(Server.IsOnline ? "green" : "red")">@(Server.IsOnline ? "online" : "offline")</span>
-<a href="/servers/@Server.ServerId"
-   class="link-underline-primary">Edit</a>
+    <button type="button"
+            class="btn btn-link"
+            @onclick="@(() => editServer = !editServer)">
+        Edit
+    </button>
+
+    @if (editServer)
+    {
+        <ServerManagement.Components.Pages.EditServer
+            Id="@Server.ServerId.ToString()"></ServerManagement.Components.Pages.EditServer>
+    }
+</li>
 
 
 @code {
+
+    private bool editServer = false;
 
     [ Parameter ]public Server? Server { get; set; }
 
