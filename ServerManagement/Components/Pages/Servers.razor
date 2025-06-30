@@ -5,7 +5,7 @@
 <br/>
 <br/>
 
-<CityListComponent
+<CityListComponent @ref="_cityListComponent"
     SelectCityCallback="HandleCitySelection"></CityListComponent>
 
 <br/>
@@ -13,17 +13,12 @@
 <SearchComponent _serverFilter="@_serverFilter"
     HandleSearchFilter="HandleSearchFilter"></SearchComponent>
 
-@* Here,ServerListComponent is a non-routable child component,
-ServerListComponent has a CityName property with [ Parameter ] attribute,
-so, the parent component can use CityName property to send
-argument to the ServerListComponent by using CityName property
-like following *@
-
 <ServerListComponent
     CityName="@selectedCity" _searchFilter="@_serverFilter"></ServerListComponent>
 
 @code {
 
+    private CityListComponent _cityListComponent;
     private string selectedCity = "Toronto";
 
     private string _serverFilter = string.Empty;
@@ -38,6 +33,8 @@ like following *@
     private void HandleSearchFilter(string serverFilter)
     {
         _serverFilter = serverFilter;
+        _cityListComponent.ClrListComponent();
+
     }
 
 }

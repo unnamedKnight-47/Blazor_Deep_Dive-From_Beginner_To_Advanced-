@@ -24,13 +24,15 @@
 
     [ Parameter ]public EventCallback<string> SelectCityCallback { get; set; }
 
-
-
-
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
         SelectCityCallback.InvokeAsync(cityName);
+    }
+
+    public void ClrListComponent()
+    {
+        selectedCity = string.Empty;
     }
 
 }
