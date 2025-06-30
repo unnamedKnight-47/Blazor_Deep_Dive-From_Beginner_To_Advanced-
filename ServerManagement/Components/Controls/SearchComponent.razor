@@ -16,6 +16,7 @@
 
     [ Parameter ]public EventCallback<string> HandleSearchFilter { get; set; }
 
+
     private void HandleSearch()
     {
         HandleSearchFilter.InvokeAsync(_serverFilter);
