@@ -9,17 +9,9 @@
     SelectCityCallback="HandleCitySelection"></CityListComponent>
 
 <br/>
-@serverFilter
-<br>
-<div class="input-group">
-    <input class="form-control" @bind-value="serverFilter"
-           @bind-value:event="oninput"/>
-    <button type="button" class="btn btn-secondary">
-        Search
-    </button>
-</div>
-<br>
 
+<SearchComponent _serverFilter="@_serverFilter"
+    HandleSearchFilter="HandleSearchFilter"></SearchComponent>
 
 @* Here,ServerListComponent is a non-routable child component,
 ServerListComponent has a CityName property with [ Parameter ] attribute,
@@ -28,27 +20,24 @@ argument to the ServerListComponent by using CityName property
 like following *@
 
 <ServerListComponent
-    CityName="@selectedCity"></ServerListComponent>
+    CityName="@selectedCity" _searchFilter="@_serverFilter"></ServerListComponent>
 
 @code {
-    private string _serverFilter = string.Empty;
 
     private string selectedCity = "Toronto";
 
-    private string serverFilter
-    {
-        get { return _serverFilter; }
-        set
-        {
-            _serverFilter = value;
-            // _servers = ServersRepository.SearchServers(_serverFilter);
-        }
-    }
+    private string _serverFilter = string.Empty;
 
 
     private void HandleCitySelection(string cityName)
     {
         selectedCity = cityName;
+        _serverFilter = string.Empty;
+    }
+
+    private void HandleSearchFilter(string serverFilter)
+    {
+        _serverFilter = serverFilter;
     }
 
 }
