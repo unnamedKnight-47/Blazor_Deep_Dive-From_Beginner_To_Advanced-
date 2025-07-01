@@ -1,13 +1,50 @@
 ﻿<h3>ServerListComponent</h3>
-<ul>
-    @foreach (var item in _servers)
-    {
+@* @foreach (var item in _servers) *@
+@* { *@
+@*     <ServerComponent *@
+@*         Server="item"></ServerComponent> *@
+@* } *@
 
+
+@*
+<ul class="list-unstyled">
+    <RepeaterComponent Items="_servers">
+        <Row Context="item">
             <ServerComponent
                 Server="item"></ServerComponent>
-
-    }
+        </Row>
+    </RepeaterComponent>
 </ul>
+*@
+
+
+<table class="table table-striped">
+    <RepeaterComponent Items="_servers">
+        <Header>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Status</th>
+                <th>People Online</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+        </Header>
+
+        @* here, Row Context="item"  represents one item
+        withing the _servers list, which means we are passing
+        _servers as items in the RepeaterComponent, and then
+        within row we are passing each server component in the
+        RepeaterComponent *@
+
+        <Row Context="item">
+            <ServerComponent
+                Server="item"></ServerComponent>
+        </Row>
+    </RepeaterComponent>
+</table>
 
 @code {
     [ Parameter ]public string? CityName { get; set; }

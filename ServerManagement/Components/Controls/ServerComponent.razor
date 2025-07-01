@@ -1,27 +1,61 @@
-@* Here code written in "background-color: @GetBackGroundClr()"
-will execute when the value of SelectedCity is set. *@
-<li style="background-color: @GetBackGroundClr()">
-    @Server.Name in @Server.City is <span
-        style="color: @(Server.IsOnline ? "green" : "red")">@(Server.IsOnline ? "online" : "offline")</span>
-    <a href="/servers/@Server.ServerId"
-       class="link-underline-primary">Edit</a>
+<tr style="background-color: @GetBackGroundClr()">
+    <td>
+        @Server.Name
+    </td>
+    <td>
+        @Server.City
+    </td>
 
-    <button type="button"
-            class="btn btn-link"
-            @onclick="@(() => editServer = !editServer)">
-        Edit
-    </button>
+    <td style="color: @(Server.IsOnline ? "green" : "red")">
+        @(Server.IsOnline ? "online" : "offline")
+    </td>
+    <td>
+        @if (Server.IsOnline)
+        {
+            var random = new Random();
+            var randomNumber = random.Next(0, 501);
+            <text>@randomNumber</text>
+        }
+        else
+        {
+            <text>N/A</text>
+        }
+    </td>
+    <td>
+        @if (Server.IsOnline)
+        {
+            <button type="button"
+                    class="btn btn-outline-danger"
+                    @onclick="@(() => Server.IsOnline = false)">
+                Turn Off
+            </button>
+        }
+        else
+        {
+            <button type="button"
+                    class="btn btn-outline-success"
+                    @onclick="@(() => Server.IsOnline = true)">
+                Turn On
+            </button>
+        }
+        &nbsp;
+        <a href="/servers/@Server.ServerId"
+           class="link-underline-primary">Edit</a>
+    </td>
+</tr>
 
-    @if (editServer)
-    {
-        <ServerManagement.Components.Pages.EditServer
-            Id="@Server.ServerId.ToString()"></ServerManagement.Components.Pages.EditServer>
-    }
-</li>
+@if (editServer)
+{
+    <ServerManagement.Components.Pages.EditServer
+        Id="@Server.ServerId.ToString()"></ServerManagement.Components.Pages.EditServer>
+}
+
+
 @code {
 
     private bool editServer = false;
     [ Parameter ]public Server? Server { get; set; }
+
     [ CascadingParameter(Name = "SelectedCity") ]
     public string SelectedCity { get; set; }
 
@@ -44,5 +78,4 @@ will execute when the value of SelectedCity is set. *@
             return "white";
         }
     }
-
 }
