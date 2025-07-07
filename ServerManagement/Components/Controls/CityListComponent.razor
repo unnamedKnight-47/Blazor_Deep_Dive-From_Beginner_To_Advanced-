@@ -1,3 +1,6 @@
+
+@implements IDisposable
+
 <h3>CityListComponent</h3>
 
 @if (_cities is not null)
@@ -15,18 +18,41 @@
 }
 
 
-
 @code {
 
     private string selectedCity = "Toronto";
-    private List<string?> _cities { get; set; } = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
+    private List<string?> _cities { get; set; } 
 
-    [ Parameter ]public EventCallback<string> SelectCityCallback { get; set; }
+    [Parameter] public EventCallback<string> SelectCityCallback { get; set; }
 
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(OnInitialized)}: {guid}");
+        _cities ??= ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
+    }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(OnParametersSet)}: {guid}");
+    }
 
     protected override bool ShouldRender()
     {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(ShouldRender)}: {guid}");
         return base.ShouldRender();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(OnAfterRender)}: {guid}");
     }
 
 
@@ -34,6 +60,12 @@
     {
         selectedCity = cityName;
         SelectCityCallback.InvokeAsync(cityName);
+    }
+
+    public void Dispose()
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(Dispose)}: {guid}");
     }
 
     public void ClrListComponent()
