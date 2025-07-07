@@ -21,8 +21,14 @@
     private string selectedCity = "Toronto";
     private List<string?> _cities { get; set; } = ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
 
-
     [ Parameter ]public EventCallback<string> SelectCityCallback { get; set; }
+
+
+    protected override bool ShouldRender()
+    {
+        return base.ShouldRender();
+    }
+
 
     private void HandleCitySelection(string cityName)
     {
