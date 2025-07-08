@@ -33,6 +33,14 @@
         _cities ??= ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
     }
 
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(SetParametersAsync)}: {guid}");
+        return base.SetParametersAsync(parameters);
+    }
+
+
 
     protected override void OnParametersSet()
     {
