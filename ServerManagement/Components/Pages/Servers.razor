@@ -6,21 +6,17 @@
 <CityListComponent @ref="_cityListComponent"
                    SelectCityCallback="HandleCitySelection"></CityListComponent>
 
-
-
 <br/>
 
 <SearchComponent _serverFilter="@_serverFilter"
                  HandleSearchFilter="HandleSearchFilter"></SearchComponent>
 
-
 <CascadingValue Name="SelectedCity" Value="@selectedCity">
     <ServerListComponent
         CityName="@selectedCity"
-        _searchFilter="@_serverFilter"
+        SearchFilter="@_serverFilter"
         AnotherParam="@anotherParam"></ServerListComponent>
 </CascadingValue>
-
 
 @* when i cilck on the following button a randoem value will be assigned to
     the AnotherParam variable, and that value will be passed to the
@@ -32,9 +28,6 @@
 </p>
 
 @code {
-
-
-
     private CityListComponent _cityListComponent;
     private string selectedCity = "Toronto";
 
