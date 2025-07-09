@@ -1,4 +1,3 @@
-
 @implements IDisposable
 
 <h3>CityListComponent</h3>
@@ -21,17 +20,10 @@
 @code {
 
     private string selectedCity = "Toronto";
-    private List<string?> _cities { get; set; } 
+    private List<string?> _cities { get; set; }
 
     [Parameter] public EventCallback<string> SelectCityCallback { get; set; }
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var guid = Guid.NewGuid();
-        Console.WriteLine($"CityListComponent: {nameof(OnInitialized)}: {guid}");
-        _cities ??= ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
-    }
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
@@ -40,7 +32,13 @@
         return base.SetParametersAsync(parameters);
     }
 
-
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var guid = Guid.NewGuid();
+        Console.WriteLine($"CityListComponent: {nameof(OnInitialized)}: {guid}");
+        _cities ??= ServersRepository.GetServres().Select(s => s.City).Distinct().ToList();
+    }
 
     protected override void OnParametersSet()
     {

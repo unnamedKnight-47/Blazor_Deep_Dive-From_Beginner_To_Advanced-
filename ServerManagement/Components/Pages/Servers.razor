@@ -14,31 +14,31 @@
                  HandleSearchFilter="HandleSearchFilter"></SearchComponent>
 
 
-@* We can pass value from parent component to child component using
-[parameter] atttrubute on the child component
-<ServerListComponent
-    CityName="@selectedCity" _searchFilter="@_serverFilter"></ServerListComponent>
-*@
-
-@*
-But we can also pass value from the parent component to child component
-by Cascading Value like following, here we are cascading the
-selectedCity from parent component to child component.
-For the following scenario the document root looks like following,
-Server(ParentComponent) --> ServerListComponent --> ServerComponent
-in this example, we will pass the selectedCity form the root component
-and will catch that  value in the ServerComponent*@
-
 <CascadingValue Name="SelectedCity" Value="@selectedCity">
     <ServerListComponent
         CityName="@selectedCity"
-        _searchFilter="@_serverFilter"></ServerListComponent>
+        _searchFilter="@_serverFilter"
+        AnotherParam="@anotherParam"></ServerListComponent>
 </CascadingValue>
+
+
+@* when i cilck on the following button a randoem value will be assigned to
+    the AnotherParam variable, and that value will be passed to the
+    ServerList component. *@
+<p>
+    <button class="btn btn-primary" @onclick="@(() => { Random random = new Random();
+                                                    anotherParam = random.Next(0, 100);
+                                                        })">Change Param</button>
+</p>
 
 @code {
 
+
+
     private CityListComponent _cityListComponent;
     private string selectedCity = "Toronto";
+
+    private int anotherParam;
 
     private string _serverFilter = string.Empty;
     private void HandleCitySelection(string cityName)

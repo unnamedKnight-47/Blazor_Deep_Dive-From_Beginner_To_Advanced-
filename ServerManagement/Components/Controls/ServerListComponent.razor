@@ -1,27 +1,9 @@
-﻿<h3>ServerListComponent</h3>
-@* @foreach (var item in _servers) *@
-@* { *@
-@*     <ServerComponent *@
-@*         Server="item"></ServerComponent> *@
-@* } *@
-
-
-@*
-<ul class="list-unstyled">
-    <RepeaterComponent Items="_servers">
-        <Row Context="item">
-            <ServerComponent
-                Server="item"></ServerComponent>
-        </Row>
-    </RepeaterComponent>
-</ul>
-*@
-
+<h3>ServerListComponent</h3>
 
 <table class="table table-striped">
     <RepeaterComponent Items="_servers">
         <Header>
-            <thead>
+        <thead>
             <tr>
                 <th>Name</th>
                 <th>City</th>
@@ -30,39 +12,106 @@
                 <th></th>
                 <th></th>
             </tr>
-            </thead>
+        </thead>
         </Header>
-
-        @* here, Row Context="item"  represents one item
-        withing the _servers list, which means we are passing
-        _servers as items in the RepeaterComponent, and then
-        within row we are passing each server component in the
-        RepeaterComponent *@
-
         <Row Context="item">
-            <ServerComponent
-                Server="item"></ServerComponent>
+            <ServerComponent Server="item"></ServerComponent>
         </Row>
     </RepeaterComponent>
 </table>
 
+
+
+
 @code {
-    [ Parameter ]public string? CityName { get; set; }
-
-    [ Parameter ]public string _searchFilter { get; set; }
+    /* In the following example, within OnParametersSet HOOK
+ * we are handling CityName and searchFilter parameter.
+ * Which means, if the value of the any parameter has
+ * changed Onparameter will execute no matter what and the
+ * code inside the HOOK will execute, which is expensive
+ * if those codes are actually database calls.
+ *
+ * For example, in the following scenario, if the value of
+ * the AnotherParam changes which will come from it's parent component
+ * Server.razor (and although the value of CityName
+ * and _searchFilter hasn't changed) OnParamerterSet HOOK will execute.
+ * Since, AnotherParam has a parameter attribute, so when the value of
+ * AnotherParam changes OnParameterSet will execute.
+ *
+ * But, if the code inside the OnParameterSet HOOK were db calls
+ * that would be very expensive and totally unncessary since the
+ * operations related to AnotherParam has nothing to do with db calls,
+ * and i don't want that as it will hamper the perfromance of the component.
+ *
+ * But there is a way to prevent this from happening. That is, using
+ * SetParameterAsync HOOK Properly. An example is given below-
+ */
+    private bool isFirstRender = true;
+    [Parameter] public string? CityName { get; set; }
+    [Parameter] public string _searchFilter { get; set; }
+    [Parameter] public int AnotherParam { get; set; }
     private List<Server> _servers;
-
 
     protected override void OnParametersSet()
     {
-        if (string.IsNullOrWhiteSpace(_searchFilter))
+        /* The following code should only execute when the
+        * value of CityName or _serachFilter has changed
+             * but when the value of the AnotherParam is passed
+             * from the Server.razor component, the following code
+             * will execute although the value of CityName or _searchfilter
+             * hasn't changed.
+
+             * The soulution of this problem is before executing the OnParameterSet
+             * HOOK we have to identify if the value of CityName or _searchfilter
+             * has changed or not. If it has changed only then we will execute
+             * the OnParameterSet HOOK. And we can do that with the help of
+             * SetParameterAsync HOOK.
+             */
+        if (!isFirstRender)
         {
-            _servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            if (string.IsNullOrWhiteSpace(_searchFilter))
+            {
+                _servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            }
+            else
+            {
+                _servers = ServersRepository.SearchServers(_searchFilter);
+            }
         }
-        else
-        {
-            _servers = ServersRepository.SearchServers(_searchFilter);
-        }
+
     }
 
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        /* When we are inside this HOOK the parameters is not provided to the
+         * OnParameterSet HOOK yet. By calling base.SetParametersAsync(parameters)
+         * we provide the parameters to OnParameterSet HOOK.
+         * 
+         * So, within this HOOK we can determine whether we want to pass the value
+         * to the OnParamtersSet or not. 
+         */
+
+        return base.SetParametersAsync(parameters);
+    }
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        if (firstRender)
+        {
+            if (string.IsNullOrWhiteSpace(_searchFilter))
+            {
+                _servers = ServersRepository.GetServersByCity(CityName ?? "Toronto");
+            }
+            else
+            {
+                _servers = ServersRepository.SearchServers(_searchFilter);
+            }
+            isFirstRender = false;
+            StateHasChanged();
+        }
+    }
 }
