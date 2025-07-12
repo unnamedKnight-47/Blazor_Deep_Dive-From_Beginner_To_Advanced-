@@ -20,30 +20,11 @@
     </RepeaterComponent>
 </table>
 
+<br />
+<button type="button" class="btn btn-primary" @onclick="@(() => {})">Refresh</button>
 
 @code {
-    /* In the following example, within OnParametersSet HOOK
- * we are handling CityName and searchFilter parameter.
- * Which means, if the value of the any parameter has
- * changed Onparameter will execute no matter what and the
- * code inside the HOOK will execute, which is expensive
- * if those codes are actually database calls.
- *
- * For example, in the following scenario, if the value of
- * the AnotherParam changes which will come from it's parent component
- * Server.razor (and although the value of CityName
- * and _searchFilter hasn't changed) OnParamerterSet HOOK will execute.
- * Since, AnotherParam has a parameter attribute, so when the value of
- * AnotherParam changes OnParameterSet will execute.
- *
- * But, if the code inside the OnParameterSet HOOK were db calls
- * that would be very expensive and totally unncessary since the
- * operations related to AnotherParam has nothing to do with db calls,
- * and i don't want that as it will hamper the perfromance of the component.
- *
- * But there is a way to prevent this from happening. That is, using
- * SetParameterAsync HOOK Properly. An example is given below-
- */
+
     private bool isFirstRender = true;
     [Parameter] public string? CityName { get; set; }
     [Parameter] public string SearchFilter { get; set; }
@@ -52,19 +33,7 @@
 
     protected override void OnParametersSet()
     {
-        /* The following code should only execute when the
-        * value of CityName or _serachFilter has changed
-                 * but when the value of the AnotherParam is passed
-                 * from the Server.razor component, the following code
-                 * will execute although the value of CityName or _searchfilter
-                 * hasn't changed.
 
-                 * The soulution of this problem is before executing the OnParameterSet
-                 * HOOK we have to identify if the value of CityName or _searchfilter
-                 * has changed or not. If it has changed only then we will execute
-                 * the OnParameterSet HOOK. And we can do that with the help of
-                 * SetParameterAsync HOOK.
-                 */
         if (!isFirstRender)
         {
             if (string.IsNullOrWhiteSpace(SearchFilter))
@@ -82,42 +51,32 @@
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        /* When we are inside this HOOK the parameters is not provided to the
-        * OnParameterSet HOOK yet. By calling base.SetParametersAsync(parameters)
-        * we provide the parameters to OnParameterSet HOOK.
-             *
-             * So, within this HOOK we can determine whether we want to pass the value
-             * to the OnParamtersSet or not. In order to that we can do the following,
-             */
-
+        /* if the value of the CityName hasn't changed then we will
+         * not invoke OnParameterSet HOOK.  */
         if (parameters.TryGetValue<string>("CityName", out var cityName))
         {
-            /* if the value of the CityName hasn't changed then we will
-             * not invoke OnParameterSet HOOK.  */
             if (cityName != CityName)
             {
                 base.SetParametersAsync(parameters);
             }
         }
 
+        /* if the value of the SearchFilter hasn't changed then we will
+         * not invoke OnParameterSet HOOK.  */
+
         if (parameters.TryGetValue<string>("SearchFilter", out var searchFilter))
         {
-            /* if the value of the SearchFilter hasn't changed then we will
-             * not invoke OnParameterSet HOOK.  */
             if (SearchFilter != searchFilter)
             {
                 base.SetParametersAsync(parameters);
             }
         }
 
-        /* If CityName or SearchFilter variable's value hasn't changed
-         * then we will not invoke OnParameterSet. And we can do that
-         * by returning simply Task.CompletedTask.
-         *
-         * This will not invoke OnParameterSet HOOK.
-         * And that's how we can control the execution of OnParameterSet HOOK.
-         * And this way we can make our components more optimized.
-         */
+        /* when the following statement is executed the other event's in the
+         * component lifecycle such as (OnParameterSet, ShouldRender,
+         * OnAfterRender) will not execute. In other words, no other
+         * HOOKS will execute that is available in the lifecycle if the
+         * following statement is executed. */
         return Task.CompletedTask;
     }
 

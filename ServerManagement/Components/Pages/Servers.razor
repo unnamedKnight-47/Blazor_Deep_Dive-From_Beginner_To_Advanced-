@@ -18,13 +18,9 @@
         AnotherParam="@anotherParam"></ServerListComponent>
 </CascadingValue>
 
-@* when i cilck on the following button a randoem value will be assigned to
-    the AnotherParam variable, and that value will be passed to the
-    ServerList component. *@
 <p>
     <button class="btn btn-primary" @onclick="@(() => { Random random = new Random();
-                                                    anotherParam = random.Next(0, 100);
-                                                        })">Change Param</button>
+                                                    anotherParam = random.Next(0, 100); })">Change Param</button>
 </p>
 
 @code {
