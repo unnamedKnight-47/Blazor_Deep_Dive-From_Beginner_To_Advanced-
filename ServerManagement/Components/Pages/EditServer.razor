@@ -1,6 +1,9 @@
 @page "/servers/{id}"
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" ConfirmExternalNavigation="true"></NavigationLock>
 
 <h3>EditServer</h3>
 <br />
@@ -64,6 +67,7 @@
 
 
 @code {
+
     [Parameter] public string? Id { get; set; }
 
     [SupplyParameterFromForm(FormName = "formServer")]
@@ -78,28 +82,6 @@
         if (isParsedSuccessfully) server ??= ServersRepository.GetServerByServerId(intServerId);
     }
 
-    // private void Submit()
-    // {
-    //     if (server is not null)
-    //     {
-    //         isParsedSuccessfully = Int32.TryParse(Id, out intServerId);
-    //         if (isParsedSuccessfully)
-    //         {
-    //             ServersRepository.UpdateServer(intServerId, server);
-    //         }
-    //     }
-    //     try
-    //     {
-
-    //         NavigationManager.NavigateTo("/servers");
-    //     }
-    //     catch (Exception ex)
-    //     {
-
-    //         Console.WriteLine($"{ex.Message}");
-    //     }
-
-    // }
 
     private async Task Submit()
     {
@@ -117,5 +99,15 @@
             NavigationManager.NavigateTo("/servers");
         });
     }
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to leave this page?");
+        if (!isConfirmed)
+        {
+            context.PreventNavigation();
+        }
+    }
+
 }
 

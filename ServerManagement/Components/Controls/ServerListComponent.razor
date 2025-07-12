@@ -52,8 +52,6 @@
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        /* if the value of the CityName hasn't changed then we will
-        * not invoke OnParameterSet HOOK.  */
         if (parameters.TryGetValue<string>("CityName", out var cityName))
         {
             if (cityName != CityName)
@@ -62,9 +60,6 @@
             }
         }
 
-        /* if the value of the SearchFilter hasn't changed then we will
-        * not invoke OnParameterSet HOOK.  */
-
         if (parameters.TryGetValue<string>("SearchFilter", out var searchFilter))
         {
             if (SearchFilter != searchFilter)
@@ -72,12 +67,6 @@
                 base.SetParametersAsync(parameters);
             }
         }
-
-        /* when the following statement is executed the other event's in the
-        * component lifecycle such as (OnParameterSet, ShouldRender,
-         * OnAfterRender) will not execute. In other words, no other
-         * HOOKS will execute that is available in the lifecycle if the
-         * following statement is executed. */
         return Task.CompletedTask;
     }
 
@@ -98,42 +87,11 @@
             }
             isFirstRender = false;
 
-            /* Timer = new(_ =>
-                {
-                    StateHasChanged();
-                }, null, 2000, 2000); this callback will fire in every two seconds.
-                So, in every 2 seconds we are using StatusChanged() to inform the
-                BLAZOR SERVER that the state of the application has changed, therefore
-                you need to refresh yourself.*/
-
             StateHasChanged();
             Timer = new(_ =>
                 {
                    InvokeAsync(StateHasChanged);
                 }, null, 2000, 2000);
-
-                /* if we execute the code like following,
-                 * Timer = new(_ =>
-                {
-                    StateHasChanged();
-                }, null, 2000, 2000); 
-                 * it will throw an exception. Because, the Timer is running on a seperate thread.
-                    Now we know that Because of the SynchronizationContext The UI Thread and the
-                    Blazor SERVER works as a single thread. Since, the Timer running on a different
-                    thread (since its not in the BLAZOR SERVER'S main thread), we can't access anything
-                    form the threads managed by SynchronizationContext (UI Thread and BLAZOR SERVER main thread).
-
-                    In order to fix that we have to tell BLAZOR SERVER, whatever is going on within the Timer thread
-                    should be considered as the part of SynchronizationContext. And we can do that with
-                    InvokeAsync.
-
-                    "InvokeAsync" says execute the supplied item on the associated SynchronizationContext. So this
-                    forces the logic that you provided to run on the same SynchronizationContext.
-
-                    For handling External Event we should always use InvokeAsync.
-
-
-                 */
         }
     }
 }
