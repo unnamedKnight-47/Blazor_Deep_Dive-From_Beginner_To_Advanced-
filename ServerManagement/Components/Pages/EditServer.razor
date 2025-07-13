@@ -1,9 +1,12 @@
 @page "/servers/{id}"
+@page "/servers/back_from/{cityName}"
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
 
-<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" ConfirmExternalNavigation="true"></NavigationLock>
+@* Implementing Navigation Lock *@
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"
+    ConfirmExternalNavigation="true"></NavigationLock>
 
 <h3>EditServer</h3>
 <br />
@@ -60,13 +63,15 @@
         </button>
 
         <a type="button" class="btn btn-primary" href="/servers">Servers</a>
-
-
     </EditForm>
 }
 
 
 @code {
+
+
+
+    [Parameter] public string? CityName{ get; set; }
 
     [Parameter] public string? Id { get; set; }
 
@@ -81,7 +86,6 @@
         isParsedSuccessfully = Int32.TryParse(Id, out intServerId);
         if (isParsedSuccessfully) server ??= ServersRepository.GetServerByServerId(intServerId);
     }
-
 
     private async Task Submit()
     {
@@ -99,15 +103,18 @@
             NavigationManager.NavigateTo("/servers");
         });
     }
+
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
-
-        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to leave this page?");
+        /* Executing Javascript's `confirm` method that is built in JavaScript
+         * This function returns a boolean */
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+                                "Are you sure you want to leave this page?");
         if (!isConfirmed)
         {
+            /*The following method prevents navigation from one controller to another*/
             context.PreventNavigation();
         }
     }
-
 }
 
