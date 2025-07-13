@@ -53,17 +53,21 @@
 
 @code {
 
+    private System.Globalization.TextInfo myTI = new System.Globalization.CultureInfo("en-US", false).TextInfo;
+
     private bool editServer = false;
     [ Parameter ]public Server? Server { get; set; }
 
     [ CascadingParameter(Name = "SelectedCity") ]
     public string SelectedCity { get; set; }
 
+
     private string GetBackGroundClr()
     {
+
         if (SelectedCity is not null)
         {
-            switch (SelectedCity)
+            switch (myTI.ToTitleCase(SelectedCity))
             {
                 case "Toronto": return "powderblue";
                 case "Montreal": return "lightgray";

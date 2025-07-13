@@ -1,5 +1,4 @@
 @page "/servers/{id}"
-@page "/servers/back_from/{cityName}"
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -69,10 +68,6 @@
 
 @code {
 
-
-
-    [Parameter] public string? CityName{ get; set; }
-
     [Parameter] public string? Id { get; set; }
 
     [SupplyParameterFromForm(FormName = "formServer")]
@@ -107,14 +102,15 @@
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         /* Executing Javascript's `confirm` method that is built in JavaScript
-         * This function returns a boolean */
-        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm",
-                                "Are you sure you want to leave this page?");
+        * This function returns a boolean */
+                                                var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+                                                                        "Are you sure you want to leave this page?");
         if (!isConfirmed)
         {
             /*The following method prevents navigation from one controller to another*/
             context.PreventNavigation();
         }
     }
+
 }
 
